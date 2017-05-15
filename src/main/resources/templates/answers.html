@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Answers</title>
+    <style>table, tr, td, th {
+        border: 1px solid black;
+    }</style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+
+
+<div th:each="postcount : ${post}">
+    <table style="width: 1000px; border-bottom: 0px">
+        <tr>
+            <td>Autor:</td>
+            <td>Temat:</td>
+            <td>Kategoria:</td>
+            <td>Data:</td>
+        </tr>
+        <tr>
+            <td style="width: 100px" th:text="${postcount.user_name}"></td>
+
+            <td th:text="${postcount.topic}"></td>
+            <td style="width: 100px" th:text="${postcount.category}"></td>
+            <td style="width: 150px" th:text="${postcount.date}"></td>
+            <br/>
+        </tr>
+    </table>
+    <table style="width: 1000px; border-top: 0px">
+        <tr>
+            <td style="width: 100px">Tresc posta:</td>
+            <td th:text="${postcount.content}"></td>
+            <td style="width: 150px">Ilosc plusow: <span th:text="${postcount.ilosc_plusow}"></span></td>
+            <td style="width: 100px"><center><form action="/forum/like" method="POST">
+                <input type="hidden" th:name="user_name" th:value="${#httpServletRequest.remoteUser}"/>
+                <input type="hidden" th:name="id" th:value="${postcount.public_message_id}"/>
+                <input type="submit" value="Plusuje to!"/>
+            </form></center></td>
+        </tr>
+    </table>
+    <br/>
+</div>
+<br/><br/>
+
+
+Odpowiedz na ten post:
+<br/><br/>
+<div sec:authorize="isAuthenticated()">
+    <form method="POST">
+        <input type="hidden" th:name="user_name" th:value="${#httpServletRequest.remoteUser}"/>
+        <input type="textarea" style="width:700px;height:100px" name="content"/>
+        <div><input type="submit" value="Wyslij odpowiedz"/>    </div>
+    </form>
+</div>
+
+
+
+<br/><br/>
+Odpowiedzi:
+<div th:each="answer : ${answers}">
+    <table style="width: 1000px">
+        <tr>
+            <th style="width: 100px">Autor:</th>
+            <th>Odpowiedz:</th>
+            <th>Data:</th>
+        </tr>
+        <tr>
+            <td style="width: 100px" th:text="${answer.user_name}"></td>
+            <td th:text="${answer.content}"></td>
+
+            <td style="width: 150px" th:text="${answer.date}"></td>
+
+
+        </tr>
+        <br/>
+    </table>
+
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8" />
+    <title>Strona główna forum</title>
+    <style>table, tr, td {
+        border: 1px solid black;
+    }</style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+
+
+<form sec:authorize="isAuthenticated()" th:action="@{/forum/add_pub_msg/}" style="display: inline;" method="GET">
+    <input type="submit" value="Dodaj post"/>
+</form>
+<form th:action="@{/forum/}" style="display: inline;" method="GET">
+<select name="sort_by" size="1" onchange='this.form.submit()'>
+    <option value="">Sortuj według:</option>
+    <option value="date">Daty</option>
+    <option value="ilosc_plusow">Ilości plusów</option>
+
+</select>
+    <input type="hidden" th:if="${param.category != null}" th:name="category" th:value="${param.category[0]}"/>
+</form>
+
+<form action="/forum/" style="display: inline;" method="GET">
+
+    <select name="category" size="1" onchange='this.form.submit()'>
+        <option value="">Wybierz kategorie:</option>
+        <option value="wszystkie">Wszystkie</option>
+        <option value="Ogolny">Ogolne</option>
+        <option value="Inny">Inne</option>
+
+    </select>
+        <input type="hidden" th:if="${param.sort_by != null}" th:name="sort_by" th:value="${param.sort_by[0]}"/>
+
+
+
+</form>
+
+
+
+<div th:each="post : ${posts}">
+<table style="width: 1000px; border-bottom: 0px">
+    <tr><td>Autor:</td><td>Temat:</td><td>Kategoria:</td><td>Data:</td></tr>
+    <tr>
+        <td style="width: 100px" th:text="${post.user_name}"></td>
+
+        <td th:text="${post.topic}"></td>
+        <td style="width: 100px" th:text="${post.category}"></td>
+
+        <td style="width: 150px" th:text="${post.date}"></td>
+        <br/>
+    </tr>
+</table>
+<table style="width: 1000px; border-top: 0px">
+    <tr>
+        <td style="width: 100px">Tresc posta: <br/>
+
+            <form th:action="${post.public_message_id}" method="GET">
+                <input type="submit" value="Odpowiedzi"/>
+            </form>
+
+        </td>
+        <td th:text="${post.content}"></td>
+        <td style="width: 150px">Ilosc plusow: <span th:text="${post.ilosc_plusow}"></span></td>
+        <td style="width: 100px"><center><form action="/forum/like_from_forum" method="POST">
+            <input type="hidden" th:name="user_name" th:value="${#httpServletRequest.remoteUser}"/>
+            <input type="hidden" th:name="id" th:value="${post.public_message_id}"/>
+            <input type="submit" value="Plusuje to!"/>
+        </form></center></td>
+    </tr>
+</table>
+</div>
+</body>
+</html>

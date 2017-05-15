@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+
+
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+<form method="post">
+NAZWA UZYTKOWNIKA:    <input type="text" name="username"/><br />
+HASLO:    <input type="text" name="password"/><br />
+    <input type="submit" value="Zarejestruj!"/><br /><br /><br />
+
+</form>
+
+<a style="color:blue" th:href="@{/welcome}">Go to User Welcome Page!</a>
+<br/>
+<form method="post">
+    <input type="submit" name="/user/admin" /></form>
+<a style="color:blue" th:href="@{/admin}">Go to Admin Page!</a>
+
+</body>
+</html>
